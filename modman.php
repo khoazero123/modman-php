@@ -50,6 +50,19 @@ class Modman {
                     $oInit = new Modman_Command_Init();
                     $oInit->doInit($sInitPath, $sBaseDir);
                     break;
+                case 'list':
+                    $sCwd = getcwd();
+                    $isAbsolute = false;
+                    if (isset($aParameters[2])) {
+                        $isAbsolute = true;
+                    }
+                    $modules = array_filter(glob($sCwd.'\.modman\*'), 'is_dir');
+                    foreach ($modules as $i => $path) {
+                        if(!$isAbsolute) echo basename($path);
+                        else echo $path;
+                    }
+                    exit;
+                    break;
                 case 'deploy':
                     if (!isset($aParameters[2])) {
                         throw new Exception('please specify module name');
@@ -128,6 +141,7 @@ PHP-based module manager, originally implemented as bash-script
 Following general commands are currently supported:
 - link (optional --force)
 - init (optional <basedir>)
+- list (optional --absolute) list all valid modules that are currently checked out
 - repair
 - deploy (optional --force)
 - deploy-all (optional --force)
